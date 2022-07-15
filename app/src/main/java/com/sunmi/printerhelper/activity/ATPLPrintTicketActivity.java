@@ -36,7 +36,6 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
     Button calculateBtn, printBtn;
     ImageView settingsBtn, qrCodeIV;
     float totalPriceOfLitres, taxValue, totalBillCost;
-
     // Text Settings
     byte resource = 0x00;
     String charset = "utf-8";
@@ -75,13 +74,13 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
         totalBillValue_textView = findViewById(R.id.total_price);
         printBtn = findViewById(R.id.printBtn);
 
-        AidlUtil.getInstance().initPrinter();
-
-        baseApp = (BaseApp)getApplication();
-
         GoToFuelPricesActivity();
         RadioButtonSettings();
         CalculateBtnSettings();
+
+        AidlUtil.getInstance().initPrinter();
+
+        baseApp = (BaseApp)getApplication();
 
 
         printBtn.setOnClickListener(new View.OnClickListener() {

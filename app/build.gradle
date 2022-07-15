@@ -16,11 +16,11 @@ android {
         }
     }
 
-    compileSdkVersion 32
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.test.printertestdemop1"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 29
         versionCode 9
         versionName "v2.7.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

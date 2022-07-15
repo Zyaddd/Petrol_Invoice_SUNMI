@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ATPLPrintTicketActivity"
     android:orientation="vertical"
     android:layout_weight="6"
-    android:background="@color/blue">
+    android:background="@color/blue"
+    tools:context="com.sunmi.printerhelper.activity.ATPLPrintTicketActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -445,9 +445,4 @@
         </ScrollView>
 
     </RelativeLayout>
-
-
-
-
-
 </LinearLayout>
