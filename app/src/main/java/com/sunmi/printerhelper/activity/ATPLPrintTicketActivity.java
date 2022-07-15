@@ -1,10 +1,16 @@
 package com.sunmi.printerhelper.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sunmi.printerhelper.BaseApp;
@@ -21,6 +27,15 @@ import java.io.IOException;
  */
 
 public class ATPLPrintTicketActivity extends AppCompatActivity {
+
+    TextView gasType_textView, LitresAmount_textView, priceOfOneLiter_textView, totalLitresPrice_textView, taxPrice_textView;
+    TextView taxPerValue_textView, totalBillValue_textView;
+    TextView companyAddress, companyTaxNo, companyUnifiedNo;
+    RadioGroup radioGroup_gasType;
+    EditText litresAmount_editText;
+    Button calculateBtn, printBtn;
+    ImageView settingsBtn, qrCodeIV;
+    float totalPriceOfLitres, taxValue, totalBillCost;
 
     // Text Settings
     byte resource = 0x00;
@@ -47,13 +62,29 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_print_ticket);
 
+        radioGroup_gasType = findViewById(R.id.radio_group_gasType);
+        gasType_textView = findViewById(R.id.gas_type);
+        litresAmount_editText = findViewById(R.id.litres_amount_editText);
+        calculateBtn = findViewById(R.id.calculate_btn);
+        LitresAmount_textView = findViewById(R.id.litres_amount_textView);
+        settingsBtn = findViewById(R.id.settings_btn);
+        priceOfOneLiter_textView = findViewById(R.id.priceOfOneLiter);
+        totalLitresPrice_textView = findViewById(R.id.liters_price);
+        taxPrice_textView = findViewById(R.id.tax_price_textView);
+        taxPerValue_textView = findViewById(R.id.taxPerValue_textView);
+        totalBillValue_textView = findViewById(R.id.total_price);
+        printBtn = findViewById(R.id.printBtn);
+
         AidlUtil.getInstance().initPrinter();
 
         baseApp = (BaseApp)getApplication();
 
-        Button btn = (Button) findViewById(R.id.printBtn);
+        GoToFuelPricesActivity();
+        RadioButtonSettings();
+        CalculateBtnSettings();
 
-        btn.setOnClickListener(new View.OnClickListener() {
+
+        printBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 printTicket();
@@ -152,4 +183,114 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
+
+    /////////////////////////////////////////////////////////////////////////////
+    ////////////                    CALCULATOR FUNCTIONS        /////////////////
+    /////////////////////////////////////////////////////////////////////////////
+
+    public void CalculateBtnSettings() {
+        calculateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(litresAmount_editText.getText().toString().equals("") || gasType_textView.getText().toString().equals("-")){
+                    Toast.makeText(getApplicationContext(), "Please enter amount of litres & gas type", Toast.LENGTH_SHORT).show();
+                } else {
+                    LitresAmount_textView.setText(litresAmount_editText.getText());
+                    LitresCalculations();
+                    TaxesCalculations();
+                    TotalBillCalculations();
+
+
+
+
+                }
+
+            }
+        });
+    }
+
+    public void GoToFuelPricesActivity() {
+        settingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), Fuel_Prices.class);
+                startActivity(i);
+            }
+        });
+    }
+
+    public void RadioButtonSettings() {
+        radioGroup_gasType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                switch (checkedId){
+                    case R.id.gas_diesel:
+                        gasType_textView.setText("ديزل");
+                        Fuel_Prices.pref_diesel = getApplicationContext().getSharedPreferences("prefDiesel", MODE_PRIVATE);
+                        String priceOfDiesel = Fuel_Prices.pref_diesel.getString("diesel", "No data found!");
+                        priceOfOneLiter_textView.setText(priceOfDiesel);
+                        UpdateTaxPercentage();
+                        break;
+                    case R.id.gas_98:
+                        gasType_textView.setText("98");
+                        Fuel_Prices.pref_98 = getApplicationContext().getSharedPreferences("pref98", MODE_PRIVATE);
+                        String priceOf98 = Fuel_Prices.pref_98.getString("98", "No data found!");
+                        priceOfOneLiter_textView.setText(priceOf98);
+                        UpdateTaxPercentage();
+                        break;
+                    case R.id.gas_91:
+                        gasType_textView.setText("91");
+                        Fuel_Prices.pref_91 = getApplicationContext().getSharedPreferences("pref91", MODE_PRIVATE);
+                        String priceOf91 = Fuel_Prices.pref_91.getString("91", "No data found!");
+                        priceOfOneLiter_textView.setText(priceOf91);
+                        UpdateTaxPercentage();
+                        break;
+                }
+
+            }
+        });
+    }
+
+    public void UpdateTaxPercentage() {
+        Fuel_Prices.pref_taxPer = getApplicationContext().getSharedPreferences("prefTax", MODE_PRIVATE);
+        String taxPer = Fuel_Prices.pref_taxPer.getString("tax", "No data");
+        taxPerValue_textView.setText(taxPer);
+    }
+
+
+
+    public void LitresCalculations() {
+        //liters calculations
+        String litAmount = LitresAmount_textView.getText().toString();
+        float litAmountFloat = Float.parseFloat(litAmount);
+
+        String priceLiter = priceOfOneLiter_textView.getText().toString();
+        float priceLiterFloat = Float.parseFloat(priceLiter);
+
+        totalPriceOfLitres = litAmountFloat * priceLiterFloat;
+
+        totalLitresPrice_textView.setText(String.valueOf(totalPriceOfLitres));
+    }
+
+    public void TaxesCalculations() {
+        //taxes calculation
+        String taxPerString = taxPerValue_textView.getText().toString();
+        float taxPerFloat = Float.parseFloat(taxPerString);
+
+        taxValue = (taxPerFloat/100) * totalPriceOfLitres;
+
+        taxPrice_textView.setText(String.valueOf(taxValue));
+    }
+
+    public void TotalBillCalculations() {
+        //total bill price calculation
+        totalBillCost = taxValue + totalPriceOfLitres;
+        totalBillValue_textView.setText(String.valueOf(totalBillCost));
+    }
+
+
+
 }

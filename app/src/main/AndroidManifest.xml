@@ -50,6 +50,7 @@
         <activity
             android:name=".activity.BufferActivity"
             android:parentActivityName=".activity.FunctionActivity" />
+        <activity android:name=".activity.Fuel_Prices" />
     </application>
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
