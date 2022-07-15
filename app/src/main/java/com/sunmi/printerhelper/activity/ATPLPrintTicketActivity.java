@@ -49,6 +49,20 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
 
     // Ticket Data
     String ticketHeader = "فاتورة ضريبية مبسطة";
+    String company_name = "شركة الدريس للخدمات البترولية";
+    String company_address = "الرياض , حي النسيم الشرقي , طريق خريص11421 ";
+    String branch_address = "الرياض , حي النسيم الشرقي , طريق خريص11421 ";
+    String branch_phone = "0557723422";
+    String tax_number = "123456789123";
+    String invoice_date = "03/07/2022 10:44:48";
+    String invoice_number = "123456789";
+    String product = "بنزين 91";
+    String quantity = "120";
+    String liter_price = "20";
+    String no_tax_total = "300";
+    String tax = "15";
+    String total = "315";
+
     String ticketHashCodeForQRCode = "www.finlo.in/q=415321";
     String url = "www.finlo.in";
     String ticketReceiptNumber = "B1987472913";
@@ -107,35 +121,92 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
 
     void printByAidl(){
 
-        AidlUtil.getInstance().sendRawData(ESCUtil.alignRight());
+        AidlUtil.getInstance().sendRawData(ESCUtil.alignCenter());
 
 
         AidlUtil.getInstance().printText(ticketHeader, fontSize, true, false);
         AidlUtil.getInstance().lineWrap(2);
 
+        AidlUtil.getInstance().printText(company_name, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+        AidlUtil.getInstance().printText(company_address, 15, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+
+        AidlUtil.getInstance().printText(ticketSeparator, fontSize, false, false);
+
+        AidlUtil.getInstance().sendRawData(ESCUtil.alignRight());
+
+        AidlUtil.getInstance().printText("الرقم الضريبي : ", fontSize, true, false);
+        AidlUtil.getInstance().printText(tax_number, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+
+        AidlUtil.getInstance().printText("رقم الهاتف : ", fontSize, true, false);
+        AidlUtil.getInstance().printText(branch_phone, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+
+        AidlUtil.getInstance().printText("تاريخ الفاتورة : ", 22, true, false);
+        AidlUtil.getInstance().printText(invoice_date, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+
+        AidlUtil.getInstance().printText("رقم الفاتورة : ", fontSize, true, false);
+        AidlUtil.getInstance().printText(invoice_number, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+
+        AidlUtil.getInstance().printText("المنتج  : ", fontSize, true, false);
+        AidlUtil.getInstance().printText(product, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+
+        AidlUtil.getInstance().printText("الكمية/لتر  : ", fontSize, true, false);
+        AidlUtil.getInstance().printText(quantity, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+
+        AidlUtil.getInstance().printText("سعر اللتر (شامل الضريبة) : ", fontSize, true, false);
+        AidlUtil.getInstance().printText(liter_price, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+
+        AidlUtil.getInstance().printText("المبلغ شامل الضريبة : ", fontSize, true, false);
+        AidlUtil.getInstance().printText(total, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+
+        AidlUtil.getInstance().printText("االضريبة (15%) : ", fontSize, true, false);
+        AidlUtil.getInstance().printText(tax, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(3);
+
+        AidlUtil.getInstance().sendRawData(ESCUtil.alignCenter());
         AidlUtil.getInstance().printQr(ticketHashCodeForQRCode, printSize, errorLevel);
         AidlUtil.getInstance().lineWrap(1);
 
-        AidlUtil.getInstance().printText(url, fontSize, true, false);
+        AidlUtil.getInstance().printText(branch_address, fontSize, true, false);
         AidlUtil.getInstance().lineWrap(1);
 
-        AidlUtil.getInstance().printText(ticketReceiptNumber, fontSize, false, false);
-        AidlUtil.getInstance().lineWrap(1);
-
-        AidlUtil.getInstance().printText(ticketSeparator, fontSize, false, false);
-        AidlUtil.getInstance().lineWrap(1);
-
-        AidlUtil.getInstance().sendRawData(ESCUtil.alignLeft());
-        AidlUtil.getInstance().printText(ticketDetails, fontSize, false, false);
-        AidlUtil.getInstance().lineWrap(1);
-
-        AidlUtil.getInstance().sendRawData(ESCUtil.alignCenter());
-        AidlUtil.getInstance().printText(ticketSeparator, fontSize, false, false);
-        AidlUtil.getInstance().lineWrap(1);
-
-        AidlUtil.getInstance().sendRawData(ESCUtil.alignCenter());
-        AidlUtil.getInstance().printText(ticketTerms, fontSize, false, false);
         AidlUtil.getInstance().lineWrap(3);
+
+
+
+
+//        AidlUtil.getInstance().printQr(ticketHashCodeForQRCode, printSize, errorLevel);
+//        AidlUtil.getInstance().lineWrap(1);
+//
+//        AidlUtil.getInstance().printText(url, fontSize, true, false);
+//        AidlUtil.getInstance().lineWrap(1);
+//
+//        AidlUtil.getInstance().printText(ticketReceiptNumber, fontSize, false, false);
+//        AidlUtil.getInstance().lineWrap(1);
+//
+//        AidlUtil.getInstance().printText(ticketSeparator, fontSize, false, false);
+//        AidlUtil.getInstance().lineWrap(1);
+//
+//        AidlUtil.getInstance().sendRawData(ESCUtil.alignLeft());
+//        AidlUtil.getInstance().printText(ticketDetails, fontSize, false, false);
+//        AidlUtil.getInstance().lineWrap(1);
+//
+//        AidlUtil.getInstance().sendRawData(ESCUtil.alignCenter());
+//        AidlUtil.getInstance().printText(ticketSeparator, fontSize, false, false);
+//        AidlUtil.getInstance().lineWrap(1);
+//
+//        AidlUtil.getInstance().sendRawData(ESCUtil.alignCenter());
+//        AidlUtil.getInstance().printText(ticketTerms, fontSize, false, false);
+//        AidlUtil.getInstance().lineWrap(3);
     }
 
     private void printByBluetooth() {
