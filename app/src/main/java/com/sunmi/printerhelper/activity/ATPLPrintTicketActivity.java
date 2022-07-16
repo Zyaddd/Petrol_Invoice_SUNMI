@@ -51,7 +51,7 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
     float fontSize = 24;
 
     // QR Code Settings
-    int printSize = 6;
+    int printSize = 3;
     int errorLevel = 3;
 
     BaseApp baseApp;
@@ -99,13 +99,7 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
         totalBillValue_textView = findViewById(R.id.total_price);
         printBtn = findViewById(R.id.printBtn);
 
-        product = gasType_textView.getText().toString();
-        quantity = LitresAmount_textView.getText().toString();
-        liter_price = priceOfOneLiter_textView.getText().toString();
-        no_tax_total = totalLitresPrice_textView.getText().toString();
-        tax = taxPerValue_textView.getText().toString();
-        total = totalBillValue_textView.getText().toString();
-        ticketHashCodeForQRCode = QRCodeGenerator();
+
 
         GoToFuelPricesActivity();
         RadioButtonSettings();
@@ -317,6 +311,13 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
                     TaxesCalculations();
                     TotalBillCalculations();
 
+                    product = gasType_textView.getText().toString();
+                    quantity = LitresAmount_textView.getText().toString();
+                    liter_price = priceOfOneLiter_textView.getText().toString();
+                    no_tax_total = totalLitresPrice_textView.getText().toString();
+                    tax = taxPerValue_textView.getText().toString();
+                    total = totalBillValue_textView.getText().toString();
+                    ticketHashCodeForQRCode = QRCodeGenerator();
 
 
 
