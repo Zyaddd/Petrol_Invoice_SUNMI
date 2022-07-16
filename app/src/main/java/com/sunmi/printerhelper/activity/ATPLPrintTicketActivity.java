@@ -18,9 +18,18 @@ import com.sunmi.printerhelper.R;
 import com.sunmi.printerhelper.utils.AidlUtil;
 import com.sunmi.printerhelper.utils.BluetoothUtil;
 import com.sunmi.printerhelper.utils.ESCUtil;
+import com.sunmi.printerhelper.zakatqr.InvoiceDate;
+import com.sunmi.printerhelper.zakatqr.InvoiceTaxAmount;
+import com.sunmi.printerhelper.zakatqr.InvoiceTotalAmount;
+import com.sunmi.printerhelper.zakatqr.QRBarcodeEncoder;
+import com.sunmi.printerhelper.zakatqr.Seller;
+import com.sunmi.printerhelper.zakatqr.TaxNumber;
 
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Ishant on 2019/8/13.
@@ -47,6 +56,7 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
 
     BaseApp baseApp;
 
+    String qrBarcodeHash;
     // Ticket Data
     String ticketHeader = "فاتورة ضريبية مبسطة";
     String company_name = "شركة الدريس للخدمات البترولية";
@@ -54,16 +64,17 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
     String branch_address = "الرياض , حي النسيم الشرقي , طريق خريص11421 ";
     String branch_phone = "0557723422";
     String tax_number = "123456789123";
-    String invoice_date = "03/07/2022 10:44:48";
+    String invoice_date = GetDateAndTime();
     String invoice_number = "123456789";
-    String product = "بنزين 91";
-    String quantity = "120";
-    String liter_price = "20";
-    String no_tax_total = "300";
-    String tax = "15";
-    String total = "315";
+    String product;
+    String quantity;
+    String liter_price;
+    String no_tax_total;
+    String tax;
+    String total;
+    String ticketHashCodeForQRCode;
 
-    String ticketHashCodeForQRCode = "www.finlo.in/q=415321";
+
     String url = "www.finlo.in";
     String ticketReceiptNumber = "B1987472913";
     String ticketSeparator = "--------------------------------";
@@ -87,6 +98,14 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
         taxPerValue_textView = findViewById(R.id.taxPerValue_textView);
         totalBillValue_textView = findViewById(R.id.total_price);
         printBtn = findViewById(R.id.printBtn);
+
+        product = gasType_textView.getText().toString();
+        quantity = LitresAmount_textView.getText().toString();
+        liter_price = priceOfOneLiter_textView.getText().toString();
+        no_tax_total = totalLitresPrice_textView.getText().toString();
+        tax = taxPerValue_textView.getText().toString();
+        total = totalBillValue_textView.getText().toString();
+        ticketHashCodeForQRCode = QRCodeGenerator();
 
         GoToFuelPricesActivity();
         RadioButtonSettings();
@@ -160,17 +179,21 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
         AidlUtil.getInstance().printText(quantity, fontSize, true, false);
         AidlUtil.getInstance().lineWrap(1);
 
+        AidlUtil.getInstance().printText("نسبة الضريبة (%) : ", fontSize, true, false);
+        AidlUtil.getInstance().printText(tax, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(3);
+
         AidlUtil.getInstance().printText("سعر اللتر (شامل الضريبة) : ", fontSize, true, false);
         AidlUtil.getInstance().printText(liter_price, fontSize, true, false);
+        AidlUtil.getInstance().lineWrap(1);
+
+        AidlUtil.getInstance().printText("المبلغ غير شامل الضريبة : ", fontSize, true, false);
+        AidlUtil.getInstance().printText(no_tax_total, fontSize, true, false);
         AidlUtil.getInstance().lineWrap(1);
 
         AidlUtil.getInstance().printText("المبلغ شامل الضريبة : ", fontSize, true, false);
         AidlUtil.getInstance().printText(total, fontSize, true, false);
         AidlUtil.getInstance().lineWrap(1);
-
-        AidlUtil.getInstance().printText("االضريبة (15%) : ", fontSize, true, false);
-        AidlUtil.getInstance().printText(tax, fontSize, true, false);
-        AidlUtil.getInstance().lineWrap(3);
 
         AidlUtil.getInstance().sendRawData(ESCUtil.alignCenter());
         AidlUtil.getInstance().printQr(ticketHashCodeForQRCode, printSize, errorLevel);
@@ -255,6 +278,27 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
     }
 
 
+    /////////////////////////////////////////////////////////////////////////////
+    ////////////                    QR CODE GENERATOR        ////////////////////
+    /////////////////////////////////////////////////////////////////////////////
+    String QRCodeGenerator() {
+        qrBarcodeHash = QRBarcodeEncoder.encode(
+                new Seller(company_name),
+                new TaxNumber(tax_number),
+                new InvoiceDate(GetDateAndTime()),
+                new InvoiceTotalAmount(totalBillValue_textView.getText().toString()),
+                new InvoiceTaxAmount(taxPrice_textView.getText().toString())
+        );
+        return qrBarcodeHash;
+    }
+
+    String GetDateAndTime() {
+        Date time = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String stringDate = simpleDate.format(time);
+
+        return stringDate;
+    }
 
     /////////////////////////////////////////////////////////////////////////////
     ////////////                    CALCULATOR FUNCTIONS        /////////////////
