@@ -51,7 +51,7 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
     float fontSize = 24;
 
     // QR Code Settings
-    int printSize = 3;
+    int printSize = 4;
     int errorLevel = 3;
 
     BaseApp baseApp;
@@ -64,7 +64,7 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
     String branch_address = "الرياض , حي النسيم الشرقي , طريق خريص11421 ";
     String branch_phone = "0557723422";
     String tax_number = "123456789123";
-    String invoice_date;
+    String invoice_date = GetDateAndTime();
     String invoice_number = "123456789";
     String product;
     String quantity;
@@ -187,7 +187,7 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
 
         AidlUtil.getInstance().printText("المبلغ شامل الضريبة : ", fontSize, true, false);
         AidlUtil.getInstance().printText(total, fontSize, true, false);
-        AidlUtil.getInstance().lineWrap(1);
+        AidlUtil.getInstance().lineWrap(3);
 
         AidlUtil.getInstance().sendRawData(ESCUtil.alignCenter());
         AidlUtil.getInstance().printQr(ticketHashCodeForQRCode, printSize, errorLevel);
@@ -318,7 +318,7 @@ public class ATPLPrintTicketActivity extends AppCompatActivity {
                     tax = taxPerValue_textView.getText().toString();
                     total = totalBillValue_textView.getText().toString();
                     ticketHashCodeForQRCode = QRCodeGenerator();
-                    invoice_date = GetDateAndTime();
+
 
 
                 }
